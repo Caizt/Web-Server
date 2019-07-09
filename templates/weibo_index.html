@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>weibo</title>
+    <style type="text/css">
+			body {
+				background-color: #ffffff;
+				margin-left: 20%;
+				margin-right: 20%;
+				border: 2px dotted black;
+				padding: 10px 10px 50px 50px;
+				font-family: sans-serif;
+			    }
+        .comment {
+            margin-left: 2%;
+            margin-right: 2%;
+            border: 1px rgba(199, 213, 228, 0.98) solid;
+        }
+		</style>
+
+</head>
+<body>
+<h2>发表微博</h2>
+<form action="/weibo/add" method="post">
+    <input name="content">
+    <br>
+    <button type="submit">发表新微博</button>
+</form>
+<h2>已发表的微博</h2>
+{% for w in weibos %}
+    <p>
+        {{ w.content }} from {{ user.username }}
+        <a href="/weibo/delete?id={{ w.id }}">删除</a>
+        <a href="/weibo/edit?id={{ w.id }}">修改</a>
+        <div class="comment">
+                {% for c in w.comments() %}
+
+                {{ c.user().username }} : {{ c.content }}
+                <a href="/comment/delete?id={{ c.id }}">删除</a>
+                <a href="/comment/edit?id={{ c.id }}">修改</a>
+                <br>
+            {% endfor %}
+        </div>
+
+    <form action="/comment/add" method="post">
+        <input type="hidden" name="weibo_id" value="{{ w.id }}">
+        <input name="content">
+        <br>
+        <button type="submit">添加评论</button>
+    </form>
+    </p>
+{% endfor %}
+</body>
+</html>
